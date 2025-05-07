@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sign Up - Top City Tickets</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="assets/logo.png" />
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
+  <style>
+    body.signup-body {
+      background: linear-gradient(to bottom, #0d0d1a, #1a1a2e);
+      min-height: 100vh;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .auth-container {
+      background: rgba(0, 0, 0, 0.8);
+      padding: 2rem 3rem;
+      border-radius: 20px;
+      text-align: center;
+      box-shadow: 0 0 20px rgba(0, 217, 255, 0.3);
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .auth-container .logo {
+      width: 120px;
+      margin-bottom: 1rem;
+    }
+
+    .auth-title {
+      color: #00d9ff;
+      margin-bottom: 2rem;
+      font-size: 1.8rem;
+    }
+
+    .g_id_signin {
+      display: flex;
+      justify-content: center;
+    }
+  </style>
+</head>
+<body class="signup-body">
+  <div class="auth-container">
+    <img src="assets/logo.png" alt="Top City Tickets Logo" class="logo" />
+    <h2 class="auth-title">Sign Up</h2>
+
+    <!-- Google Sign-In Button -->
+    <div id="g_id_onload"
+         data-client_id="381909501018-oj0l40g2b2muv8edgb4vlf3g49v9r1e0.apps.googleusercontent.com"
+         data-callback="handleCredentialResponse"
+         data-auto_prompt="false">
+    </div>
+    <div class="g_id_signin" data-type="standard" data-theme="outline" data-size="large"></div>
+  </div>
+
+  <script>
+    const SELLER_EMAILS = [
+      "seller1@example.com",
+      "seller2@example.com"
+    ];
+
+    function handleCredentialResponse(response) {
+      const user = jwt_decode(response.credential);
+      const email = user.email;
+
+      if (SELLER_EMAILS.includes(email)) {
+        window.location.href = "seller.html";
+      } else {
+        window.location.href = "events.html";
+      }
+    }
+  </script>
+</body>
+</html>

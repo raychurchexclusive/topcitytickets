@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Log In - Top City Tickets</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="assets/logo.png" />
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
+</head>
+<body class="login-body">
+  <div class="auth-container">
+    <img src="assets/logo.png" alt="Top City Tickets Logo" class="logo" />
+    <h2 class="auth-title">Log In</h2>
+
+    <!-- Google Sign-In Button -->
+    <div id="g_id_onload"
+         data-client_id="381909501018-oj0l40g2b2muv8edgb4vlf3g49v9r1e0.apps.googleusercontent.com"
+         data-callback="handleCredentialResponse"
+         data-auto_prompt="false">
+    </div>
+    <div class="g_id_signin" data-type="standard" data-theme="outline" data-size="large"></div>
+  </div>
+
+  <script>
+    // Replace this with your actual seller account(s)
+    const SELLER_EMAILS = [
+      "seller1@example.com",
+      "seller2@example.com"
+    ];
+
+    function handleCredentialResponse(response) {
+      const user = jwt_decode(response.credential);
+      const email = user.email;
+
+      if (SELLER_EMAILS.includes(email)) {
+        window.location.href = "seller.html";
+      } else {
+        window.location.href = "events.html";
+      }
+    }
+  </script>
+</body>
+</html>

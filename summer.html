@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Summer Beats Festival - Top City Tickets</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="stylesheets/summer.css" />
+  <link rel="icon" href="assets/logo.png" />
+</head>
+<body class="event-body">
+  <div class="event-container">
+    <a href="events.html" class="back-button">← Back to Events</a>
+    <div>
+    <img src="assets/logo.png" alt="Top City Tickets Logo" class="logo" /></div>
+    <h1 class="event-title">Summer Beats Festival</h1>
+    <p class="event-date">Saturday, July 12, 2025 · 6:00 PM</p>
+    <img src="assets/flyers/summerflyer.jpg" alt="Summer Beats Festival Flyer" class="event-flyer" />
+    <p class="event-description">
+      Join us for an unforgettable evening of music, food, and fun at the Summer Beats Festival! Experience live performances from top artists, enjoy delicious local cuisine, and dance the night away under the stars at Evergy Plaza.
+    </p>
+    <!-- Share this event -->
+    <div class="share-section">
+        <h3>Share this event:</h3>
+        <div class="share-link">
+            <span id="share-url" style="display:none;">https://topcitytickets.vercel.app/summer.html</span>
+            <button class="copy-button" onclick="copyToClipboard('https://topcitytickets.vercel.app/summer.html')">Copy Link</button>
+        </div>
+        <div class="share-buttons">
+            <a href="https://www.facebook.com/sharer/sharer.php?u=https://topcitytickets.vercel.app/summer.html" target="_blank" class="share-btn facebook">Facebook</a>
+            <a href="https://twitter.com/intent/tweet?url=https://topcitytickets.vercel.app/summer.html&text=Check out the Summer Beats Festival!" target="_blank" class="share-btn twitter">Twitter</a>
+            <a href="https://wa.me/?text=Check out the Summer Beats Festival! https://topcitytickets.vercel.app/summer.html" target="_blank" class="share-btn whatsapp">WhatsApp</a>
+        </div>
+    </div>
+
+  <script>
+    function copyToClipboard() {
+      const shareUrl = document.getElementById('share-url').textContent;
+      navigator.clipboard.writeText(shareUrl).then(() => {
+        alert('Link copied to clipboard!');
+      }).catch(err => {
+        console.error('Failed to copy: ', err);
+      });
+    }
+  </script>
+</body>
+</html>
