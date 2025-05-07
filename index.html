@@ -1,34 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Top City Tickets</title>
-    <link rel="stylesheet" href="style.css" />
-    <link rel="icon" href="assets/logo.png" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Top City Tickets</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="assets/logo.png" />
 </head>
 <body class="login-body">
-    <script>
-        function hasSessionCookie() {
-            return document.cookie.includes('cookie_sesh=');
-        }
+  <script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
 
-        function initiateGoogleLogin() {
-            window.location.href = "https://accounts.google.com/o/oauth2/v2/auth?client_id=381909501018-oj0l40g2b2muv8edgb4vlf3g49v9r1e0.apps.googleusercontent.com&redirect_uri=https://topcitytickets.vercel.app/api/auth/google/callback&response_type=code&scope=openid%20profile%20email&access_type=offline";
-        }
+  <script>
+    const SELLER_EMAILS = ["seller1@example.com", "seller2@example.com"];
 
-        if (hasSessionCookie()) {
-            window.location.href = 'events.html';
-        }
-    </script>
-    <div class="auth-container">
-        <img src="assets/logo.png" alt="Top City Tickets Logo" class="logo" />
-        <h2 class="auth-title">Welcome to Top City Tickets</h2>
-        <p style="color: #ccc; margin-bottom: 2rem;">Live Events. Local Energy.</p>
-        <div class="buttons">
-            <button class="btn" onclick="initiateGoogleLogin()">Sign Up</button>
-            <button class="btn secondary" onclick="initiateGoogleLogin()">Log In</button>
-        </div>
+    function handleCredentialResponse(response) {
+      const user = jwt_decode(response.credential);
+      const email = user.email;
+
+      // Save session cookie
+      document.cookie = "cookie_sesh=1; path=/; max-age=86400"; // 1 day session
+
+      if (SELLER_EMAILS.includes(email)) {
+        window.location.href = "seller.html";
+      } else {
+        window.location.href = "events.html";
+      }
+    }
+
+    function hasSessionCookie() {
+      return document.cookie.includes('cookie_sesh=');
+    }
+
+    function initiateGoogleLogin() {
+      // Redirect to backend Google OAuth flow
+      window.location.href = "https://accounts.google.com/o/oauth2/v2/auth?client_id=381909501018-oj0l40g2b2muv8edgb4vlf3g49v9r1e0.apps.googleusercontent.com&redirect_uri=https://topcitytickets.vercel.app/api/auth/google/callback&response_type=code&scope=openid%20profile%20email&access_type=offline";
+    }
+
+    // Auto-redirect if already logged in
+    if (hasSessionCookie()) {
+      window.location.href = "events.html";
+    }
+  </script>
+
+  <div class="auth-container">
+    <img src="assets/logo.png" alt="Top City Tickets Logo" class="logo" />
+    <h2 class="auth-title">Welcome to Top City Tickets</h2>
+    <p style="color: #ccc; margin-bottom: 2rem;">Live Events. Local Energy.</p>
+    <div class="buttons">
+      <button class="btn" onclick="initiateGoogleLogin()">Sign Up</button>
+      <button class="btn secondary" onclick="initiateGoogleLogin()">Log In</button>
     </div>
+  </div>
 </body>
 </html>
