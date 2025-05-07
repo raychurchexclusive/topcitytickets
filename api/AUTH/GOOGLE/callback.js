@@ -7,10 +7,6 @@ const oauth2Client = new google.auth.OAuth2(
   process.env.GOOGLE_REDIRECT_URI
 );
 
-console.log('GOOGLE_CLIENT_ID:', process.env.GOOGLE_CLIENT_ID);
-console.log('GOOGLE_CLIENT_SECRET:', process.env.GOOGLE_CLIENT_SECRET);
-console.log('GOOGLE_REDIRECT_URI:', process.env.GOOGLE_REDIRECT_URI);
-
 export default async (req, res) => {
   const { code } = req.query;
 
@@ -33,7 +29,7 @@ export default async (req, res) => {
       path: '/',
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      maxAge: 30 * 24 * 60 * 60, // Example: 30 days
+      maxAge: 30 * 24 * 60 * 60, // Example: 30 days in seconds
     }));
 
     res.writeHead(302, { Location: '/events.html' });
