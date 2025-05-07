@@ -1,43 +1,61 @@
-import { google } from 'googleapis';
+// /api/auth/google/callback.js (for Vercel Serverless Function)
+
+import fetch from 'node-fetch';
 import { serialize } from 'cookie';
 
-const oauth2Client = new google.auth.OAuth2(
-  process.env.GOOGLE_CLIENT_ID,
-  process.env.GOOGLE_CLIENT_SECRET,
-  process.env.GOOGLE_REDIRECT_URI
-);
+export default async function handler(req, res) {
+  const code = req.query.code;
+  if (!code) {
+    return res.status(400).send('Missing authorization code.');
+  }
 
-export default async (req, res) => {
-  const { code } = req.query;
+  const client_id = '381909501018-oj0l40g2b2muv8edgb4vlf3g49v9r1e0.apps.googleusercontent.com';
+  const client_secret = process.env.GOOGLE_CLIENT_SECRET; // Store this in Vercel env vars
+  const redirect_uri = 'https://topcitytickets.vercel.app/api/auth/google/callback';
 
   try {
-    const { tokens } = await oauth2Client.getToken(code);
-    const { id_token } = tokens;
-
-    const ticket = await oauth2Client.verifyIdToken({
-      idToken: id_token,
-      audience: process.env.GOOGLE_CLIENT_ID,
+    // Exchange code for access token
+    const tokenRes = await fetch('https://oauth2.googleapis.com/token', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({
+        code,
+        client_id,
+        client_secret,
+        redirect_uri,
+        grant_type: 'authorization_code',
+      }),
     });
-    const payload = ticket.getPayload();
-    const googleId = payload.sub;
+
+    const tokenData = await tokenRes.json();
+    const id_token = tokenData.id_token;
+
+    if (!id_token) {
+      return res.status(401).send('Token exchange failed.');
+    }
+
+    // Decode ID token (base64, no signature verification)
+    const base64Payload = id_token.split('.')[1];
+    const payload = JSON.parse(Buffer.from(base64Payload, 'base64').toString());
     const email = payload.email;
-    const name = payload.name;
 
-    const sessionId = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-
-    res.setHeader('Set-Cookie', serialize('cookie_sesh', sessionId, {
+    // Set session cookie
+    res.setHeader('Set-Cookie', serialize('cookie_sesh', '1', {
       path: '/',
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: 30 * 24 * 60 * 60, // Example: 30 days in seconds
+      httpOnly: false,
+      maxAge: 60 * 60 * 24, // 1 day
+      sameSite: 'Lax',
     }));
 
-    res.writeHead(302, { Location: '/events.html' });
-    res.end();
-
-  } catch (error) {
-    console.error('Google OAuth Callback Error:', error);
-    res.writeHead(500, { 'Content-Type': 'text/plain' });
-    res.end('Authentication failed');
+    // Redirect based on email
+    const sellerEmails = ['seller1@example.com', 'seller2@example.com'];
+    if (sellerEmails.includes(email)) {
+      res.redirect('/seller.html');
+    } else {
+      res.redirect('/events.html');
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Authentication failed.');
   }
-};
+}
