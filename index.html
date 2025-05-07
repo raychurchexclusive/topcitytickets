@@ -10,7 +10,11 @@
 <body class="login-body">
     <script>
         function hasSessionCookie() {
-            return document.cookie.includes('cookie_sesh='); // Use the cookie name you chose
+            return document.cookie.includes('cookie_sesh=');
+        }
+
+        function initiateGoogleLogin() {
+            window.location.href = "https://accounts.google.com/o/oauth2/v2/auth?client_id=381909501018-oj0l40g2b2muv8edgb4vlf3g49v9r1e0.apps.googleusercontent.com&redirect_uri=https://topcitytickets.vercel.app/api/auth/google/callback&response_type=code&scope=openid%20profile%20email&access_type=offline";
         }
 
         if (hasSessionCookie()) {
@@ -22,8 +26,8 @@
         <h2 class="auth-title">Welcome to Top City Tickets</h2>
         <p style="color: #ccc; margin-bottom: 2rem;">Live Events. Local Energy.</p>
         <div class="buttons">
-            <a href="signup.html" class="btn">Sign Up</a>
-            <a href="https://accounts.google.com/o/oauth2/v2/auth?client_id=381909501018-oj0l40g2b2muv8edgb4vlf3g49v9r1e0.apps.googleusercontent.com&redirect_uri=https://topcitytickets.vercel.app/api/auth/google/callback&response_type=code&scope=openid%20profile%20email&access_type=offline" class="btn secondary">Log In with Google</a>
+            <button class="btn" onclick="initiateGoogleLogin()">Sign Up</button>
+            <button class="btn secondary" onclick="initiateGoogleLogin()">Log In</button>
         </div>
     </div>
 </body>
