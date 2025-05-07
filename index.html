@@ -9,16 +9,11 @@
 </head>
 <body class="login-body">
     <script>
-        // Function to check if the user is logged in
-        function isLoggedIn() {
-            // In a real application, you would check for a session token,
-            // a cookie, or some other indicator of login status.
-            // For this example, we'll use a simple check of a localStorage item.
-            return localStorage.getItem('userLoggedIn') === 'true';
+        function hasSessionCookie() {
+            return document.cookie.includes('cookie_sesh='); // Use the cookie name you chose
         }
 
-        // Redirect if the user is logged in
-        if (isLoggedIn()) {
+        if (hasSessionCookie()) {
             window.location.href = 'events.html';
         }
     </script>
@@ -28,7 +23,7 @@
         <p style="color: #ccc; margin-bottom: 2rem;">Live Events. Local Energy.</p>
         <div class="buttons">
             <a href="signup.html" class="btn">Sign Up</a>
-            <a href="login.html" class="btn secondary">Log In</a>
+            <a href="https://accounts.google.com/o/oauth2/v2/auth?client_id=YOUR_GOOGLE_CLIENT_ID&redirect_uri=YOUR_VERCEL_REDIRECT_URI&response_type=code&scope=openid%20profile%20email&access_type=offline" class="btn secondary">Log In with Google</a>
         </div>
     </div>
 </body>
