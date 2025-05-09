@@ -1,56 +1,32 @@
 // src/pages/Signup.jsx
 import { useState } from "react";
-import { auth, db } from "../firebase";
+import { auth } from "../firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
 
-const Signup = () => {
+export default function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
+  const navigate = useNavigate();
 
   const handleSignup = async (e) => {
     e.preventDefault();
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
-
-      // Save basic user info in Firestore
-      await setDoc(doc(db, "users", user.uid), {
-        email: user.email,
-        createdAt: new Date(),
-      });
-
-      setMessage("Signup successful!");
+      await createUserWithEmailAndPassword(auth, email, password);
+      navigate("/login");
     } catch (error) {
-      console.error("Signup error:", error.message);
-      setMessage(`Error: ${error.message}`);
+      alert(error.message);
     }
   };
 
   return (
     <div>
-      <h2>Sign Up</h2>
+      <h2>Signup</h2>
       <form onSubmit={handleSignup}>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        /><br />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        /><br />
+        <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+        <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
         <button type="submit">Sign Up</button>
       </form>
-      <p>{message}</p>
     </div>
   );
-};
-
-export default Signup;
+}
