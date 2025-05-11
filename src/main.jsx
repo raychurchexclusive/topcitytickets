@@ -6,8 +6,9 @@ import { auth, db } from '../firebase';
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null); // Combine user and role into one object
+  const [user, setUser] = useState(null); // Store user and role together
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null); // To track any error during user data fetching
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
@@ -20,25 +21,28 @@ export function AuthProvider({ children }) {
             // Set the user with their role
             setUser({ ...firebaseUser, role: userDoc.data().role });
           } else {
+            // If the user doesn't exist in the Firestore, handle it explicitly
             setUser({ ...firebaseUser, role: null });
           }
         } catch (error) {
           console.error('Error fetching user role:', error);
+          setError(error); // Capture error and display later
           setUser(null);
         }
       } else {
-        setUser(null);
+        setUser(null); // No user signed in, reset state
       }
 
-      setLoading(false); // Set loading to false once the user is set
+      setLoading(false); // Set loading to false once the user state is set
     });
 
-    return unsubscribe;
+    return unsubscribe; // Cleanup the subscription on unmount
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, loading }}>
-      {!loading && children}
+    <AuthContext.Provider value={{ user, loading, error }}>
+      {!loading && !error && children} {/* Render children if not loading and no error */}
+      {error && <div>Error loading user data: {error.message}</div>} {/* Show error message if there's an error */}
     </AuthContext.Provider>
   );
 }
