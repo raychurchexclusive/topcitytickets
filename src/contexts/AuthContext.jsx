@@ -1,9 +1,7 @@
-// src/context/AuthContext.js
-
 import { createContext, useContext, useEffect, useState } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
-import { auth, db } from './firebase'; // Corrected import path for firebase.js
+import { auth, db } from '../firebase'; // Ensure correct import path for firebase.js
 
 const AuthContext = createContext();
 
